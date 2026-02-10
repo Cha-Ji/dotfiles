@@ -37,6 +37,19 @@ echo "[nvim]"
 mkdir -p "$HOME/.config"
 backup_and_link "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
+# wezterm (Windows 경로에 복사 — symlink 불가)
+WEZTERM_DEST="/mnt/c/Users/$(cmd.exe /C echo %USERNAME% 2>/dev/null | tr -d '\r')/.wezterm.lua"
+if [ -f "$DOTFILES_DIR/wezterm/.wezterm.lua" ]; then
+  echo "[wezterm]"
+  if [ -f "$WEZTERM_DEST" ]; then
+    mkdir -p "$BACKUP_DIR"
+    echo "  백업: $WEZTERM_DEST → $BACKUP_DIR/"
+    cp "$WEZTERM_DEST" "$BACKUP_DIR/.wezterm.lua"
+  fi
+  cp "$DOTFILES_DIR/wezterm/.wezterm.lua" "$WEZTERM_DEST"
+  echo "  복사: $DOTFILES_DIR/wezterm/.wezterm.lua → $WEZTERM_DEST"
+fi
+
 echo ""
 echo "=== 완료 ==="
 if [ -d "$BACKUP_DIR" ]; then
