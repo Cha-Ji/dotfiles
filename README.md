@@ -6,9 +6,12 @@ WSL2 (Ubuntu) 개발 환경 설정 파일 모음.
 
 | 도구 | 경로 | 설명 |
 |------|------|------|
+| **Zsh** | `zsh/.zshrc` | Oh My Zsh + Powerlevel10k, fzf, zoxide, yazi |
+| **Vim** | `vim/.vimrc` | 기본 설정 (Neovim 없는 환경용) |
+| **Starship** | `starship/starship.toml` | 크로스 셸 프롬프트 (Powerlevel10k 대안) |
 | **tmux** | `tmux/.tmux.conf` | 마우스, vim 키바인딩, One Dark 테마, 세션 복원 |
 | **Neovim** | `nvim/` | Lua 기반 설정, lazy.nvim 플러그인 매니저 |
-| ~~Vim~~ | `.vimrc` | 레거시 (Neovim으로 전환됨) |
+| **WezTerm** | `wezterm/.wezterm.lua` | WSL2 기본 도메인, tmux 세션 자동 탭 생성 |
 
 ## 설치
 
@@ -23,8 +26,21 @@ cd ~/dotfiles
 ### 사전 요구사항
 
 ```bash
+# Oh My Zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Powerlevel10k (zsh 테마)
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+# zsh 플러그인
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
 # tmux 플러그인 매니저 (TPM)
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# Starship (선택)
+curl -sS https://starship.rs/install.sh | sh
 
 # Neovim (v0.9+)
 # lazy.nvim은 첫 실행 시 자동 설치됨
@@ -33,13 +49,17 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ## Symlink 구조
 
 ```
-~/.tmux.conf     → ~/dotfiles/tmux/.tmux.conf
-~/.config/nvim/  → ~/dotfiles/nvim/
+~/.zshrc              → ~/dotfiles/zsh/.zshrc
+~/.vimrc              → ~/dotfiles/vim/.vimrc
+~/.config/starship.toml → ~/dotfiles/starship/starship.toml
+~/.tmux.conf          → ~/dotfiles/tmux/.tmux.conf
+~/.config/nvim/       → ~/dotfiles/nvim/
+~/.wezterm.lua        → ~/dotfiles/wezterm/.wezterm.lua (Windows: 복사)
 ```
 
 ## 주요 키바인딩
 
-### tmux (prefix: Ctrl+b)
+### tmux (prefix: Ctrl+a)
 
 | 키 | 동작 |
 |----|------|
@@ -77,10 +97,12 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ## 테마
 
 전체 환경에 **One Dark** 테마를 일관 적용:
+- WezTerm: `OneDark (base16)`
 - tmux 상태바: `#282C34` 배경, `#61AFEF` 활성 윈도우
 - Neovim: onedark.nvim (`dark` 스타일)
 
 ## 특이사항
 
 - **WSL2 전용**: 클립보드 연동이 `clip.exe` / `powershell.exe Get-Clipboard` 사용
+- **WezTerm**: WSL→Windows 경로 symlink 불가하여 `install.sh`가 복사로 처리
 - **tmux-resurrect + continuum**: 15분 간격 세션 자동 저장, 재부팅 후 복원

@@ -1,0 +1,62 @@
+# Starship 프롬프트 설정
+# https://starship.rs/config/
+
+# 프롬프트 전체 포맷
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$nodejs\
+$python\
+$rust\
+$cmd_duration\
+$line_break\
+$character"""
+
+# 명령어 실행 시간 (2초 이상만 표시)
+[cmd_duration]
+min_time = 2_000
+format = "[$duration]($style) "
+style = "yellow"
+
+# 디렉토리
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "blue bold"
+
+# Git 브랜치
+[git_branch]
+format = "[$symbol$branch]($style) "
+style = "purple"
+symbol = " "
+
+# Git 상태
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = "red"
+
+# Node.js
+[nodejs]
+format = "[$symbol$version]($style) "
+symbol = " "
+style = "green"
+
+# Python
+[python]
+format = "[$symbol$version]($style) "
+symbol = " "
+style = "yellow"
+
+# Rust
+[rust]
+format = "[$symbol$version]($style) "
+symbol = " "
+style = "red"
+
+# 프롬프트 문자
+[character]
+success_symbol = "[❯](green)"
+error_symbol = "[❯](red)"

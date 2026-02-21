@@ -10,13 +10,34 @@
 ## 개발 환경
 
 - OS: WSL2 (Ubuntu) on Windows
+- 터미널: WezTerm (GPU 가속, WSL2 기본 도메인)
 - 셸: Zsh + Oh My Zsh + Powerlevel10k
-- 터미널 멀티플렉서: tmux
-- 에디터: Neovim (Lua 설정)
-- 테마: One Dark (tmux, nvim 통일)
+- 터미널 멀티플렉서: tmux (prefix: Ctrl+a)
+- 에디터: Neovim (Lua 설정), Vim (폴백)
+- 프롬프트: Powerlevel10k (기본) / Starship (대안 설정 준비됨)
+- 테마: One Dark (WezTerm, tmux, Neovim 통일)
+- dotfiles: ~/dotfiles (symlink 관리, install.sh)
+
+### Zsh 설정 요약
+
+- Oh My Zsh + Powerlevel10k 테마
+- 플러그인: git, z, sudo, alias-finder, zsh-autosuggestions, zsh-syntax-highlighting
+- 도구: fzf (Ctrl+t/r, Alt+c), zoxide (cd 대체), yazi (파일매니저)
+- NVM으로 Node.js 버전 관리
+- 에디터: nvim (vi/vim 별칭)
+
+### Vim 설정 요약
+
+- Leader: Space
+- 줄 번호: 절대 + 상대
+- 탭: 2칸 스페이스, smartindent
+- 검색: ignorecase + smartcase
+- 클립보드: unnamedplus
+- Undo: 파일 저장 (undofile)
 
 ### tmux 설정 요약
 
+- Prefix: Ctrl+a (Ctrl+b에서 변경됨)
 - 마우스 활성화, base-index 1
 - 패널 분할: `|` (수평), `-` (수직)
 - 패널 이동: Alt+h/j/k/l (prefix 불필요)
@@ -51,7 +72,16 @@
 - Ctrl+h/j/k/l: 윈도우 이동
 - Ctrl+방향키: 윈도우 리사이즈
 - Shift+h/l: 버퍼 전환
-- </>  (visual): 인덴트 유지
+- </> (visual): 인덴트 유지
+
+### WezTerm 설정 요약
+
+- WSL2 (Ubuntu) 기본 도메인
+- 시작 시 tmux 세션별 wezterm 탭 자동 생성
+- 폰트: MesloLGLDZ Nerd Font 11pt
+- 테마: OneDark (base16)
+- 탭바 하단, GPU 가속 (WebGpu)
+- 런처: Ctrl+Shift+L (WSL2, PowerShell, CMD)
 
 ### 참고사항
 
