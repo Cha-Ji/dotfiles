@@ -1,0 +1,78 @@
+* {
+    font-family: "MesloLGS Nerd Font", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(40, 44, 52, 0.92);
+    color: #ABB2BF;
+    border-bottom: 2px solid rgba(92, 99, 112, 0.3);
+}
+
+/* Workspaces */
+#workspaces button {
+    padding: 0 8px;
+    color: #5C6370;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+#workspaces button.active {
+    color: #282C34;
+    background: #61AFEF;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+#workspaces button:hover {
+    background: rgba(97, 175, 239, 0.3);
+    border-radius: 4px;
+}
+
+/* Clock */
+#clock {
+    color: #ABB2BF;
+    font-weight: bold;
+}
+
+/* System modules */
+#cpu {
+    color: #E06C75;
+}
+
+#memory {
+    color: #E5C07B;
+}
+
+#network {
+    color: #98C379;
+}
+
+#pulseaudio {
+    color: #C678DD;
+}
+
+#pulseaudio.muted {
+    color: #5C6370;
+}
+
+#tray {
+    padding: 0 4px;
+}
+
+/* Common module styling */
+#cpu, #memory, #network, #pulseaudio, #clock, #tray {
+    padding: 0 10px;
+}
+
+tooltip {
+    background: #282C34;
+    border: 1px solid #5C6370;
+    border-radius: 6px;
+}
+
+tooltip label {
+    color: #ABB2BF;
+}

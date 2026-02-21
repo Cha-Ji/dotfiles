@@ -1,17 +1,21 @@
 # dotfiles
 
-WSL2 (Ubuntu) 개발 환경 설정 파일 모음.
+크로스 플랫폼 개발 환경 설정 파일 모음. WSL2 / Arch Linux / macOS 자동 감지.
 
 ## 포함 설정
 
-| 도구 | 경로 | 설명 |
-|------|------|------|
-| **Zsh** | `zsh/.zshrc` | Oh My Zsh + Powerlevel10k, fzf, zoxide, yazi |
-| **Vim** | `vim/.vimrc` | 기본 설정 (Neovim 없는 환경용) |
-| **Starship** | `starship/starship.toml` | 크로스 셸 프롬프트 (Powerlevel10k 대안) |
-| **tmux** | `tmux/.tmux.conf` | 마우스, vim 키바인딩, One Dark 테마, 세션 복원 |
-| **Neovim** | `nvim/` | Lua 기반 설정, lazy.nvim 플러그인 매니저 |
-| **WezTerm** | `wezterm/.wezterm.lua` | WSL2 기본 도메인, tmux 세션 자동 탭 생성 |
+| 도구 | 경로 | 플랫폼 | 설명 |
+|------|------|--------|------|
+| **Zsh** | `zsh/.zshrc` | WSL | Oh My Zsh + Powerlevel10k, fzf, zoxide, yazi |
+| **Zsh** | `zsh/.zshrc-standalone` | Arch/macOS | Starship, pacman/brew 플러그인 |
+| **Vim** | `vim/.vimrc` | 공통 | 기본 설정 (Neovim 없는 환경용) |
+| **Starship** | `starship/starship.toml` | 공통 | 크로스 셸 프롬프트 |
+| **tmux** | `tmux/.tmux.conf` | 공통 | vim 키바인딩, One Dark, 클립보드 자동 감지 |
+| **Neovim** | `nvim/` | 공통 | Lua 기반 설정, lazy.nvim |
+| **WezTerm** | `wezterm/.wezterm.lua` | WSL | WSL2 도메인, tmux 세션 자동 탭 |
+| **kitty** | `kitty/kitty.conf` | Arch/Linux | One Dark, keyd 연동 |
+| **waybar** | `waybar/` | Arch/Linux | Hyprland 상단 바, One Dark |
+| **wofi** | `wofi/` | Arch/Linux | 앱 런처, 다크 테마 |
 
 ## 설치
 
@@ -21,41 +25,63 @@ cd ~/dotfiles
 ./install.sh
 ```
 
+`install.sh`가 플랫폼(Arch/WSL/macOS)을 자동 감지하여 적절한 설정만 설치합니다.
 기존 파일은 `~/.dotfiles-backup/` 에 자동 백업됩니다.
 
 ### 사전 요구사항
 
+**공통:**
 ```bash
-# Oh My Zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# Powerlevel10k (zsh 테마)
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-
-# zsh 플러그인
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-
 # tmux 플러그인 매니저 (TPM)
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
 
-# Starship (선택)
-curl -sS https://starship.rs/install.sh | sh
+**WSL (Oh My Zsh 사용):**
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
 
-# Neovim (v0.9+)
-# lazy.nvim은 첫 실행 시 자동 설치됨
+**Arch Linux:**
+```bash
+sudo pacman -S zsh zsh-autosuggestions zsh-syntax-highlighting starship fzf fd kitty waybar wofi
 ```
 
 ## Symlink 구조
 
+**공통:**
 ```
-~/.zshrc              → ~/dotfiles/zsh/.zshrc
-~/.vimrc              → ~/dotfiles/vim/.vimrc
-~/.config/starship.toml → ~/dotfiles/starship/starship.toml
-~/.tmux.conf          → ~/dotfiles/tmux/.tmux.conf
-~/.config/nvim/       → ~/dotfiles/nvim/
-~/.wezterm.lua        → ~/dotfiles/wezterm/.wezterm.lua (Windows: 복사)
+~/.vimrc              → vim/.vimrc
+~/.config/starship.toml → starship/starship.toml
+~/.tmux.conf          → tmux/.tmux.conf
+~/.config/nvim/       → nvim/
 ```
+
+**WSL:**
+```
+~/.zshrc              → zsh/.zshrc
+~/.wezterm.lua        → wezterm/.wezterm.lua (Windows: 복사)
+```
+
+**Arch Linux:**
+```
+~/.zshrc              → zsh/.zshrc-standalone
+~/.config/kitty/kitty.conf → kitty/kitty.conf
+~/.config/waybar/     → waybar/{config,style.css}
+~/.config/wofi/       → wofi/{config,style.css}
+```
+
+## 클립보드 자동 감지 (tmux)
+
+tmux 설정에 `if-shell`로 플랫폼별 클립보드를 자동 선택:
+
+| 환경 | 클립보드 도구 |
+|------|-------------|
+| Wayland (Arch) | `wl-copy` / `wl-paste` |
+| WSL | `clip.exe` / `powershell.exe Get-Clipboard` |
+| macOS | `pbcopy` / `pbpaste` |
 
 ## 주요 키바인딩
 
@@ -69,40 +95,24 @@ curl -sS https://starship.rs/install.sh | sh
 | `Alt+방향키` | 패널 리사이즈 |
 | `Alt+y` | yazi 팝업 |
 | `v` (복사모드) | 선택 시작 |
-| `y` (복사모드) | 복사 (Windows 클립보드) |
-| `prefix+p` | 붙여넣기 (Windows 클립보드) |
+| `y` (복사모드) | 복사 (시스템 클립보드) |
+| `prefix+p` | 붙여넣기 |
 
 ### Neovim (leader: Space)
 
 | 키 | 동작 |
 |----|------|
 | `Ctrl+n` | Neo-tree 토글 |
+| `Ctrl+p` | 파일 검색 (Telescope) |
 | `Ctrl+h/j/k/l` | 윈도우 이동 |
-| `Ctrl+방향키` | 윈도우 리사이즈 |
 | `Shift+h/l` | 버퍼 전환 |
-| `< / >` (visual) | 인덴트 유지 |
-
-### Neovim 플러그인
-
-| 플러그인 | 역할 |
-|---------|------|
-| lazy.nvim | 플러그인 매니저 |
-| neo-tree.nvim | 파일 탐색기 |
-| telescope.nvim | Fuzzy 검색 |
-| nvim-treesitter | 구문 강조 |
-| vim-fugitive | Git 통합 |
-| gitsigns.nvim | Git diff 표시 |
-| onedark.nvim | One Dark 테마 |
+| `Space+fg` | Live grep |
+| `Space+fb` | 버퍼 목록 |
 
 ## 테마
 
 전체 환경에 **One Dark** 테마를 일관 적용:
-- WezTerm: `OneDark (base16)`
+- kitty / WezTerm: One Dark 컬러스킴
 - tmux 상태바: `#282C34` 배경, `#61AFEF` 활성 윈도우
 - Neovim: onedark.nvim (`dark` 스타일)
-
-## 특이사항
-
-- **WSL2 전용**: 클립보드 연동이 `clip.exe` / `powershell.exe Get-Clipboard` 사용
-- **WezTerm**: WSL→Windows 경로 symlink 불가하여 `install.sh`가 복사로 처리
-- **tmux-resurrect + continuum**: 15분 간격 세션 자동 저장, 재부팅 후 복원
+- waybar / wofi: One Dark 다크 테마
