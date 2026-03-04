@@ -99,6 +99,7 @@ if [[ "$PLATFORM" == "arch" || "$PLATFORM" == "linux" ]]; then
   echo "[waybar]"
   backup_and_link "$DOTFILES_DIR/waybar/config" "$HOME/.config/waybar/config"
   backup_and_link "$DOTFILES_DIR/waybar/style.css" "$HOME/.config/waybar/style.css"
+  backup_and_link "$DOTFILES_DIR/waybar/scripts/pocket-monitor.py" "$HOME/.config/waybar/scripts/pocket-monitor.py"
 
   echo "[wofi]"
   backup_and_link "$DOTFILES_DIR/wofi/config" "$HOME/.config/wofi/config"
